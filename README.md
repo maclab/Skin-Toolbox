@@ -8,8 +8,8 @@ electrostatics.  With an integrated database of materials, the software also opt
 required attributes for the robot skin, such as weight and sensitivity.
 
 This software is based on MATLAB and COMSOL Multiphysics. The demo video of this software can be found at https://youtu.be/bbWejIUxqrx
----
 
+---
 Skin Toolbox is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
