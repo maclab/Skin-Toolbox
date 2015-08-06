@@ -7,8 +7,7 @@ triangular modules and patches that can be created from multiple modules, in ter
 electrostatics.  With an integrated database of materials, the software also optimizes the choice of material to obtain
 required attributes for the robot skin, such as weight and sensitivity.
 
-This software is based on MATLAB and COMSOL Multiphysics.
-
+This software is based on MATLAB and COMSOL Multiphysics. The demo video of this software can be found at https://youtu.be/bbWejIUxqrx
 ---
 
 Skin Toolbox is free software: you can redistribute it and/or modify
