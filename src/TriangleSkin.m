@@ -177,6 +177,24 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 
 global model pressure
 
+%pressure aera
+s = str2double(get(handles.edit_TypeOfTouch2,'String'));
+X = str2double(get(handles.edit_TypeOfTouch3,'String')); %convert to meter unit
+Y = str2double(get(handles.edit_TypeOfTouch4,'String'));
+
+model.param.set('stress',pressure*1e3);
+%model.param.set('stress','30e3');
+model.study('std1').feature('param').set('plist', 'range(0,stress/10,stress)');
+model.study('std1').feature('stat').set('physselection', 'solid');
+
+model.sol('sol1').feature('s1').feature('p1').set('plist', 'range(0,stress/10,stress)');
+
+model.param.set('s', s);
+model.param.set('stress_x',X/1000);
+model.param.set('stress_y',Y/1000);
+
+h= waitbar(0,num2str(pressure));
+
 % geometrical parameters
 taxel_radius = str2double(get(handles.edit1,'String'));
 pitch = str2double(get(handles.edit2,'String'));
@@ -194,26 +212,19 @@ E= str2double(get(handles.edit7,'String'));
 poisson = get(handles.edit8,'String');
 EpsR = get(handles.edit9,'String');
 
-
 model.param.set('E', E*1e3 );
 model.param.set('poisson', poisson);
 model.param.set('EpsR', EpsR);
 
-%pressure aera
-s = str2double(get(handles.edit_TypeOfTouch2,'String'));
-X = str2double(get(handles.edit_TypeOfTouch3,'String')); %convert to meter unit
-Y = str2double(get(handles.edit_TypeOfTouch4,'String'));
-
-model.param.set('stress',pressure*1e3);
-model.param.set('s', s);
-model.param.set('stress_x',X/1000);
-model.param.set('stress_y',Y/1000);
-
-h= waitbar(0,'Updating the model, please wait...');
-
-
+waitbar(0.5,h,'working...');
 model.sol('sol1').runAll;
+%model.result('pg1').run;
+model.result('pg1').setIndex('looplevel', '11', 0);
 model.result('pg1').run;
+model.result('pg2').setIndex('looplevel', '11', 0);
+model.result('pg2').run;
+%model.physics('ale').feature('pres1').selection.all;
+model.sol('sol2').runAll;
 waitbar(1,h,'Finished');
 delete(h);
 
@@ -244,16 +255,19 @@ function uipanel4_SelectionChangeFcn(hObject, eventdata, handles)
 global pressure;
 switch get(eventdata.NewValue,'Tag')   % Get Tag of selected object
     case 'radiobutton_TypeOfTouch1'
-      pressure = 10;
+      %pressure = 10;
+      set(handles.edit_TypeOfTouch1,'String',10);
     case 'radiobutton_TypeOfTouch2'
-      pressure = 40; 
+      %pressure = 40;
+      set(handles.edit_TypeOfTouch1,'String',40);
     case 'radiobutton_TypeOfTouch3'
       pressure = str2double(get(handles.edit_TypeOfTouch1,'String'));
     otherwise
-      pressure = 40;
+      %pressure = 40;
+      pressure = str2double(get(handles.edit_TypeOfTouch1,'String'));
        % Code for when there is no match. 
 end
-
+pressure = str2double(get(handles.edit_TypeOfTouch1,'String'));
 %pressure
 
 
@@ -450,7 +464,7 @@ switch get(eventdata.NewValue,'Tag')   % Get Tag of selected object
     case 'radiobutton6'
       s = 163.61;
     otherwise
-      s = 69.91;
+      s = 24;
        % Code for when there is no match. 
 end
 set(handles.edit_TypeOfTouch2,'String',s);
@@ -494,7 +508,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 h= waitbar(0,'Updating the model, please wait...');
-global model pressure patch module
+global model patch module
 
 % geometrical parameters
 taxel_radius = str2double(get(handles.edit1,'String'));
@@ -518,7 +532,8 @@ model.param.set('E', E*1e3 );
 model.param.set('poisson', poisson);
 model.param.set('EpsR', EpsR);
 
-%pressure 
+%pressure
+pressure = str2double(get(handles.edit_TypeOfTouch1,'String'));
 s = str2double(get(handles.edit_TypeOfTouch2,'String'));
 X = str2double(get(handles.edit_TypeOfTouch3,'String')); %convert to meter unit
 Y = str2double(get(handles.edit_TypeOfTouch4,'String'));
@@ -794,6 +809,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global model
+
 index_selected = num2str(get(handles.listbox2,'Value'));
 expression = ['es.C' index_selected index_selected];
 capacitance = mpheval(model,expression);
